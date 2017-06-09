@@ -31,12 +31,18 @@ RUN \
 RUN if [ -e /opt/python/cp35-cp35m/bin/python ]; then \
     : nothing to do here since it is updated by manylinux-common/install-python-packages.sh ; \
   else \
-    wget https://bootstrap.pypa.io/get-pip.py && \
-    python get-pip.py --ignore-installed && \
-    rm get-pip.py || exit 1; \
+    wget -O - https://bootstrap.pypa.io/get-pip.py | \
+      python - --ignore-installed --prefix=/usr --install-option="--install-purelib=/usr/lib/python2.7/dist-packages" || \
+      exit 1; \
   fi
 
-RUN $([ -e /opt/python/cp35-cp35m/bin/python ] && echo "/opt/python/cp35-cp35m/bin/python" || echo "python") -m pip install --ignore-installed conan
+RUN if [ -e /opt/python/cp35-cp35m/bin/python ]; then \
+    /opt/python/cp35-cp35m/bin/python -m pip install --ignore-installed conan || exit 1; \
+  else \
+    python -m pip install --prefix=/usr conan && \
+    find /usr/lib/python2.7/site-packages/ -maxdepth 1 -mindepth 1 | \
+      xargs -i mv '{}' /usr/lib/python2.7/dist-packages || exit 1; \
+  fi
 
 RUN echo "root:root" | chpasswd
 WORKDIR /work
