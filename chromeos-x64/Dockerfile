@@ -14,7 +14,7 @@ COPY ${CROSS_TRIPLE}-noop.sh /usr/bin/${CROSS_TRIPLE}-noop
 
 COPY Toolchain.cmake /usr/lib/${CROSS_TRIPLE}/
 ENV CMAKE_TOOLCHAIN_FILE /usr/lib/${CROSS_TRIPLE}/Toolchain.cmake
-ENV DEFAULT_DOCKCROSS_IMAGE jam7/linux-x64
+ENV DEFAULT_DOCKCROSS_IMAGE jam7/chromeos-x64
 
 # Build-time metadata as defined at http://label-schema.org
 ARG BUILD_DATE

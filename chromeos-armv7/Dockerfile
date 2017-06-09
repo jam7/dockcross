@@ -25,7 +25,7 @@ ENV AS=/usr/bin/${CROSS_TRIPLE}-as \
     CXX=/usr/bin/${CROSS_TRIPLE}-g++ \
     LD=/usr/bin/${CROSS_TRIPLE}-ld
 
-ENV DEFAULT_DOCKCROSS_IMAGE jam7/linux-armv7
+ENV DEFAULT_DOCKCROSS_IMAGE jam7/chromeos-armv7
 
 # Note: Toolchain file support is currently in debian Experimental:
 # https://wiki.debian.org/CrossToolchains#In_jessie_.28Debian_8.29
