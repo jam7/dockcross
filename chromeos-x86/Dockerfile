@@ -11,6 +11,10 @@ RUN dpkg --add-architecture i386 && \
     libexpat1-dev:i386 \
     ncurses-dev:i386
 
+RUN apt-get -y install \
+  libcurl3:i386 \
+  liblzma5:i386
+
 ENV CROSS_TRIPLE i686-linux-gnu
 ENV CROSS_ROOT /usr/${CROSS_TRIPLE}
 ENV PATH ${PATH}:${CROSS_ROOT}/bin
@@ -31,7 +35,8 @@ RUN cd ${CROSS_ROOT}/bin && \
 ENV AS=${CROSS_ROOT}/bin/${CROSS_TRIPLE}-as \
     AR=${CROSS_ROOT}/bin/${CROSS_TRIPLE}-ar \
     CC=${CROSS_ROOT}/bin/${CROSS_TRIPLE}-gcc \
-    CXX=${CROSS_ROOT}/bin/${CROSS_TRIPLE}-g++
+    CXX=${CROSS_ROOT}/bin/${CROSS_TRIPLE}-g++ \
+    LD_LIBRARY_PATH=/usr/local/lib:/lib/i386-linux-gnu/i686/cmov
 
 
 COPY imagefiles/install-openssl.sh /dockcross/

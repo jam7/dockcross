@@ -16,6 +16,10 @@ RUN apt-get update && apt-get install -y \
   ncurses-dev:armhf \
   libssl-dev:armhf
 
+RUN apt-get install -y \
+  libcurl3:armhf \
+  liblzma5:armhf
+
 ENV CROSS_TRIPLE arm-linux-gnueabihf
 ENV CROSS_ROOT /usr/${CROSS_TRIPLE}
 ENV AS=/usr/bin/${CROSS_TRIPLE}-as \
@@ -23,7 +27,8 @@ ENV AS=/usr/bin/${CROSS_TRIPLE}-as \
     CC=/usr/bin/${CROSS_TRIPLE}-gcc \
     CPP=/usr/bin/${CROSS_TRIPLE}-cpp-4.9 \
     CXX=/usr/bin/${CROSS_TRIPLE}-g++ \
-    LD=/usr/bin/${CROSS_TRIPLE}-ld
+    LD=/usr/bin/${CROSS_TRIPLE}-ld \
+    LD_LIBRARY_PATH=/usr/local/lib:/lib/arm-linux-gnueabihf
 
 ENV DEFAULT_DOCKCROSS_IMAGE jam7/chromeos-armv7
 

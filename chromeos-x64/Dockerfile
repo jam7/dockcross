@@ -1,6 +1,10 @@
 FROM jam7/base:latest
 MAINTAINER Kazushi (Jam) Marukawa "jam@pobox.com"
 
+RUN apt-get install -y \
+  libcurl3 \
+  liblzma5
+
 ENV CROSS_TRIPLE x86_64-linux-gnu
 ENV CROSS_ROOT /usr/bin
 ENV AS=/usr/bin/${CROSS_TRIPLE}-as \
@@ -8,7 +12,8 @@ ENV AS=/usr/bin/${CROSS_TRIPLE}-as \
     CC=/usr/bin/${CROSS_TRIPLE}-gcc \
     CPP=/usr/bin/${CROSS_TRIPLE}-cpp \
     CXX=/usr/bin/${CROSS_TRIPLE}-g++ \
-    LD=/usr/bin/${CROSS_TRIPLE}-ld
+    LD=/usr/bin/${CROSS_TRIPLE}-ld \
+    LD_LIBRARY_PATH=/usr/local/lib:/usr/local/lib64
 
 COPY ${CROSS_TRIPLE}-noop.sh /usr/bin/${CROSS_TRIPLE}-noop
 
