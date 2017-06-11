@@ -15,28 +15,32 @@ RUN apt-get -y install \
   libcurl3:i386 \
   liblzma5:i386
 
-ENV CROSS_TRIPLE i686-linux-gnu
-ENV CROSS_ROOT /usr/${CROSS_TRIPLE}
-ENV PATH ${PATH}:${CROSS_ROOT}/bin
-RUN mkdir -p ${CROSS_ROOT}/bin
-COPY ${CROSS_TRIPLE}.sh ${CROSS_ROOT}/bin/${CROSS_TRIPLE}.sh
-COPY ${CROSS_TRIPLE}-as.sh ${CROSS_ROOT}/bin/${CROSS_TRIPLE}-as.sh
-COPY ${CROSS_TRIPLE}-noop.sh ${CROSS_ROOT}/bin/${CROSS_TRIPLE}-noop.sh
-RUN cd ${CROSS_ROOT}/bin && \
-  chmod +x ${CROSS_TRIPLE}.sh && \
-  ln -s /usr/bin/x86_64-linux-gnu-gcc && \
-  ln -s /usr/bin/x86_64-linux-gnu-g++ && \
-  ln -s /usr/bin/x86_64-linux-gnu-as && \
-  ln -s ${CROSS_TRIPLE}.sh ${CROSS_TRIPLE}-gcc && \
-  ln -s ${CROSS_TRIPLE}.sh ${CROSS_TRIPLE}-g++ && \
-  ln -s ${CROSS_TRIPLE}-as.sh ${CROSS_TRIPLE}-as && \
-  ln -s /usr/bin/x86_64-linux-gnu-ar ${CROSS_TRIPLE}-ar && \
-  ln -s ${CROSS_TRIPLE}-noop.sh ${CROSS_TRIPLE}-noop
-ENV AS=${CROSS_ROOT}/bin/${CROSS_TRIPLE}-as \
-    AR=${CROSS_ROOT}/bin/${CROSS_TRIPLE}-ar \
-    CC=${CROSS_ROOT}/bin/${CROSS_TRIPLE}-gcc \
-    CXX=${CROSS_ROOT}/bin/${CROSS_TRIPLE}-g++ \
-    LD_LIBRARY_PATH=/usr/local/lib:/lib/i386-linux-gnu/i686/cmov
+# RUN ln -s /lib/i386-linux-gnu/ld-2.19.so /lib
+RUN ln -s /lib/i386-linux-gnu/i686/cmov/libc.so.6 /lib
+RUN ln -s /lib/i386-linux-gnu/i686/cmov/libpthread.so.0 /lib
+
+#ENV CROSS_TRIPLE i686-linux-gnu
+#ENV CROSS_ROOT /usr/${CROSS_TRIPLE}
+#ENV PATH ${PATH}:${CROSS_ROOT}/bin
+#RUN mkdir -p ${CROSS_ROOT}/bin
+#COPY ${CROSS_TRIPLE}.sh ${CROSS_ROOT}/bin/${CROSS_TRIPLE}.sh
+#COPY ${CROSS_TRIPLE}-as.sh ${CROSS_ROOT}/bin/${CROSS_TRIPLE}-as.sh
+#COPY ${CROSS_TRIPLE}-noop.sh ${CROSS_ROOT}/bin/${CROSS_TRIPLE}-noop.sh
+#RUN cd ${CROSS_ROOT}/bin && \
+#  chmod +x ${CROSS_TRIPLE}.sh && \
+#  ln -s /usr/bin/x86_64-linux-gnu-gcc && \
+#  ln -s /usr/bin/x86_64-linux-gnu-g++ && \
+#  ln -s /usr/bin/x86_64-linux-gnu-as && \
+#  ln -s ${CROSS_TRIPLE}.sh ${CROSS_TRIPLE}-gcc && \
+#  ln -s ${CROSS_TRIPLE}.sh ${CROSS_TRIPLE}-g++ && \
+#  ln -s ${CROSS_TRIPLE}-as.sh ${CROSS_TRIPLE}-as && \
+#  ln -s /usr/bin/x86_64-linux-gnu-ar ${CROSS_TRIPLE}-ar && \
+#  ln -s ${CROSS_TRIPLE}-noop.sh ${CROSS_TRIPLE}-noop
+#ENV AS=${CROSS_ROOT}/bin/${CROSS_TRIPLE}-as \
+#    AR=${CROSS_ROOT}/bin/${CROSS_TRIPLE}-ar \
+#    CC=${CROSS_ROOT}/bin/${CROSS_TRIPLE}-gcc \
+#    CXX=${CROSS_ROOT}/bin/${CROSS_TRIPLE}-g++
+ENV LD_LIBRARY_PATH=/usr/local/lib:/lib/i386-linux-gnu/i686/cmov
 
 
 COPY imagefiles/install-openssl.sh /dockcross/
@@ -48,8 +52,8 @@ ENV DEFAULT_DOCKCROSS_IMAGE jam7/chromeos-x86
 
 # Note: Toolchain file support is currently in debian Experimental:
 # https://wiki.debian.org/CrossToolchains#In_jessie_.28Debian_8.29
-COPY Toolchain.cmake /usr/lib/${CROSS_TRIPLE}/
-ENV CMAKE_TOOLCHAIN_FILE /usr/lib/${CROSS_TRIPLE}/Toolchain.cmake
+#COPY Toolchain.cmake /usr/lib/${CROSS_TRIPLE}/
+#ENV CMAKE_TOOLCHAIN_FILE /usr/lib/${CROSS_TRIPLE}/Toolchain.cmake
 
 COPY linux32-entrypoint.sh /dockcross/
 ENTRYPOINT ["/dockcross/linux32-entrypoint.sh"]
